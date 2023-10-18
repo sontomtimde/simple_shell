@@ -26,5 +26,7 @@ int parse_input(char *input, char **args);
 void handle_built_in_commands(char **args);
 void execute_external_command(char **args);
 void print_environment(void);
+void displayPrompt(void);
+void processCommand(char *command);
 
 #endif /* SHELL_H */
