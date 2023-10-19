@@ -1,53 +1,5 @@
 #include "shell.h"
 
-void displayPrompt(void)
-{
-	if (isatty(STDIN_FILENO))
-	{
-		printf("Simple_Shell> ");
-		fflush(stdout);
-	}
-}
-
-int executeSingleCommand(char **args)
-{
-	pid_t childPid = fork();
-
-	if (childPid < 0)
-	{
-		perror("Fork error");
-		return (1); /* Return 1 to indicate failure */
-	}
-	else if (childPid == 0)
-	{
-		if (execvp(args[0], args) == -1)
-		{
-			perror("Execution error");
-			exit(2);
-		}
-	}
-	else
-	{
-		int childStatus;
-
-		waitpid(childPid, &childStatus, 0);
-
-		if (WIFEXITED(childStatus))
-		{
-			int exitStatus = WEXITSTATUS(childStatus);
-
-			return (exitStatus); /* Return exit status */
-		}
-		else if (WIFSIGNALED(childStatus))
-		{
-			int terminatingSignal = WTERMSIG(childStatus);
-			(void)terminatingSignal;
-			return (1); /* Return 1 to indicate failure */
-		}
-	}
-	return (0); /* Return 0 to indicate success */
-}
-
 int main(void)
 {
 	char *command = NULL;
@@ -77,4 +29,18 @@ int main(void)
 	}
 	free(command);
 	return (0);
+}
+
+/**
+ * printEnvironment - Prints the current environment variables.
+ */
+void printEnvironment(void)
+{
+	int i = 0;
+
+	while (environ[i] != NULL)
+	{
+		printf("%s\n", environ[i]);
+		i++;
+	}
 }
