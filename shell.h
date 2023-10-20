@@ -7,25 +7,25 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <errno.h>
 
-#define MAX_ARGS 1024
+#define MAX_INPUT_SIZE 1024
+#define MAX_ARGS 64
 
-extern char **environ;
+typedef struct Alias
+{
+	char *name;
+	char *value;
+	struct Alias *next;
+} Alias;
 
-unsigned int customMatching(char c, const char *str);
-char *custom_strtok(char *str, const char *delim);
-int executeCustomSingleCommand(char **args);
-char *combineCustomPaths(void);
-void printCustomError(char *command);
-void handleCustomInternalCommand(char **args);
-void handleCustomExternalCommand(char **args);
-void displayCustomPrompt(void);
-int parseCustomInput(char *input, char **args, int *argCount);
-void handleCustomBuiltInCommands(char **args);
-void executeCustomExternalCommand(char **args);
-void printCustomEnvironment(void);
-void processCustomCommand(char *command, int length);
+Alias *alias_list = NULL;
 
-#endif /*SHELL_H */
+void parse_command(char *command, char *args[MAX_ARGS]);
+void execute_command(char *args[MAX_ARGS]);
+void add_alias(char *name, char *value);
+int resolve_alias(char *name, char *resolved, size_t size);
+void list_env_variables();
 
+int main(int argc, char *argv[]);
+
+#endif /* SHELL_H */
