@@ -13,6 +13,9 @@
 
 extern char **environ;
 
+unsigned int matching(char c, const char *str);
+char *_strtok(char *str, const char *delim);
+int executeSingleCommand(char **args);
 char *combinePaths(void);
 void printError(char *command);
 void handleInternalCommand(char **args);
