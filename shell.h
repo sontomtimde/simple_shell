@@ -13,18 +13,19 @@
 
 extern char **environ;
 
-unsigned int matching(char c, const char *str);
-char *_strtok(char *str, const char *delim);
-int executeSingleCommand(char **args);
-char *combinePaths(void);
-void printError(char *command);
-void handleInternalCommand(char **args);
-void handleExternalCommand(char **args);
-void displayPrompt(void);
-void processCommand(char *command);
-int parse_input(char *input, char **args);
-void handleBuiltInCommands(char **args);
-void executeExternalCommand(char **args);
-void printEnvironment(void);
+unsigned int customMatching(char c, const char *str);
+char *custom_strtok(char *str, const char *delim);
+int executeCustomSingleCommand(char **args);
+char *combineCustomPaths(void);
+void printCustomError(char *command);
+void handleCustomInternalCommand(char **args);
+void handleCustomExternalCommand(char **args);
+void displayCustomPrompt(void);
+int parseCustomInput(char *input, char **args, int *argCount);
+void handleCustomBuiltInCommands(char **args);
+void executeCustomExternalCommand(char **args);
+void printCustomEnvironment(void);
+void processCustomCommand(char *command, int length);
 
-#endif /* SHELL_H */
+#endif /*SHELL_H */
+
