@@ -37,13 +37,13 @@ void execute_command(char *args[MAX_ARGS])
 	{
 		if (execvp(args[0], args) == -1)
 		{
-			perror("Simple_Shell");
+			perror(args[0]);
 			exit(1);
 		}
 	}
 	else if (pid < 0)
 	{
-		perror("Simple_Shell");
+		perror(args[0]);
 	}
 	else
 	{
@@ -97,12 +97,14 @@ int main(int argc, char *argv[])
 	char input[MAX_INPUT_SIZE];
 	char *args[MAX_ARGS];
 
+	int is_piped = !isatty(STDIN_FILENO);
+
 	if (argc > 1)
 	{
 		FILE *file = fopen(argv[1], "r");
 		if (file == NULL)
 		{
-			perror("Simple_Shell");
+			perror(argv[0]);
 			exit(1);
 		}
 
@@ -123,13 +125,20 @@ int main(int argc, char *argv[])
 
 	while (1)
 	{
+
 		char resolved_command[MAX_INPUT_SIZE];
 		int alias_resolved;
 
-		printf("Simple_Shell> ");
+		if (!is_piped)
+		{
+			printf("Simple_Shell> ");
+		}
 		if (fgets(input, sizeof(input), stdin) == NULL)
 		{
-			printf("\n");
+			if (!is_piped)
+			{
+				printf("\n");
+			}
 			exit(0);
 		}
 
@@ -148,7 +157,10 @@ int main(int argc, char *argv[])
 		alias_resolved = resolve_alias(input, resolved_command, sizeof(resolved_command));
 		if (alias_resolved)
 		{
-			printf("Resolved alias: %s\n", resolved_command);
+			if (!is_piped)
+			{
+				printf("Resolved alias: %s\n", resolved_command);
+			}
 			parse_command(resolved_command, args);
 			execute_command(args);
 		}
@@ -174,9 +186,9 @@ int main(int argc, char *argv[])
 				else if (strcmp(args[0], "cd") == 0)
 				{
 					if (args[1] == NULL)
-						fprintf(stderr, "Simple_Shell: cd: missing argument\n");
+						fprintf(stderr, "%s: cd: missing argument\n", argv[0]);
 					else if (chdir(args[1]) != 0)
-						perror("Simple_Shell");
+						perror(argv[0]);
 				}
 				else if (strcmp(args[0], "alias") == 0)
 				{
